@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prueba de Conocimientos Básicos</title>
+<style>
+  :root{
+    --navy: #1B3A4B;
+    --navy-dark: #122630;
+    --gold: #C99A3B;
+    --gold-light: #E4C77A;
+    --paper: #FAF7F0;
+    --ink: #2B2B2B;
+    --ink-soft: #5A5A52;
+    --line: #DCD5C4;
+    --ok: #3F7D58;
+    --bad: #B23A2E;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Iowan Old Style","Palatino Linotype",Georgia,serif;
+    line-height:1.55;
+  }
+
+  .sans{ font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+
+  header.top{
+    background: var(--navy);
+    color: var(--paper);
+    padding: 28px 20px;
+    text-align:center;
+    border-bottom: 4px solid var(--gold);
+  }
+  header.top h1{
+    margin:0;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  header.top p{
+    margin: 6px 0 0;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--gold-light);
+    font-size: 0.92rem;
+  }
+
+  main{
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+
+  .card{
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 32px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+  }
+
+  .screen{ display:none; }
+  .screen.active{ display:block; }
+
+  h2{
+    font-size: 1.3rem;
+    margin-top:0;
+    color: var(--navy);
+  }
+
+  label.field-label{
+    display:block;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+
+  input[type=text]{
+    width:100%;
+    padding: 12px 14px;
+    font-size: 1rem;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--paper);
+  }
+  input[type=text]:focus{
+    outline: 2px solid var(--gold);
+    outline-offset: 1px;
+  }
+
+  button{
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 0.98rem;
+    font-weight: 600;
+    padding: 13px 24px;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    background: var(--navy);
+    color: #fff;
+    transition: background 0.15s ease;
+  }
+  button:hover{ background: var(--navy-dark); }
+  button:focus-visible{ outline: 2px solid var(--gold); outline-offset: 2px; }
+  button:disabled{ opacity: 0.45; cursor: not-allowed; }
+
+  button.secondary{
+    background: transparent;
+    color: var(--navy);
+    border: 1px solid var(--navy);
+  }
+  button.secondary:hover{ background: rgba(27,58,75,0.06); }
+
+  .actions{ margin-top: 26px; display:flex; gap: 12px; flex-wrap: wrap; }
+
+  .progress-row{
+    display:flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+  .progress-track{
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+    margin-bottom: 26px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background: var(--gold);
+    width: 0%;
+    transition: width 0.25s ease;
+  }
+
+  .area-tag{
+    display:inline-block;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 0.78rem;
+    color: var(--navy);
+    background: rgba(27,58,75,0.07);
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-bottom: 14px;
+  }
+
+  .question-text{
+    font-size: 1.12rem;
+    margin: 0 0 22px;
+    color: var(--ink);
+  }
+
+  .options{ display:flex; flex-direction:column; gap: 10px; }
+
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap: 12px;
+    padding: 13px 16px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    cursor:pointer;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 0.97rem;
+    background: var(--paper);
+  }
+  .option:hover{ border-color: var(--gold); }
+  .option.selected{
+    border-color: var(--navy);
+    background: rgba(27,58,75,0.06);
+  }
+  .option input{ margin-top: 3px; accent-color: var(--navy); }
+
+  .result-score{
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 4px 0 0;
+  }
+  .result-score.pass{ color: var(--ok); }
+  .result-score.fail{ color: var(--bad); }
+
+  .result-sub{
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+
+  .breakdown{
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+  }
+  .breakdown-row{
+    display:flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 0.9rem;
+    border-bottom: 1px dotted var(--line);
+  }
+  .breakdown-row:last-child{ border-bottom:none; }
+
+  /* Certificate */
+  .certificate{
+    border: 2px solid var(--navy);
+    padding: 40px 32px;
+    position: relative;
+    text-align:center;
+    background:
+      linear-gradient(#fff,#fff) padding-box,
+      repeating-linear-gradient(45deg, var(--gold) 0 6px, transparent 6px 12px) border-box;
+  }
+  .certificate-inner{
+    border: 1px solid var(--gold);
+    padding: 30px 20px;
+  }
+  .cert-eyebrow{
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.03em;
+  }
+  .cert-title{
+    font-size: 1.6rem;
+    color: var(--navy);
+    margin: 10px 0 4px;
+  }
+  .cert-name{
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin: 22px 0 6px;
+    font-style: italic;
+    border-bottom: 1px solid var(--line);
+    display:inline-block;
+    padding-bottom: 6px;
+    min-width: 260px;
+  }
+  .cert-body{
+    max-width: 420px;
+    margin: 14px auto 0;
+    color: var(--ink);
+  }
+  .cert-meta{
+    display:flex;
+    justify-content: space-around;
+    margin-top: 30px;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .cert-meta strong{ display:block; color: var(--ink); font-size: 1rem; }
+
+  .seal{
+    width: 64px; height:64px;
+    border-radius:50%;
+    border: 2px solid var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    margin: 20px auto 0;
+    color: var(--gold);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight:700;
+    font-size: 0.75rem;
+    text-align:center;
+    line-height:1.1;
+  }
+
+  .next-steps{
+    margin-top: 30px;
+    background: rgba(201,154,59,0.1);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    padding: 18px 20px;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 0.92rem;
+    text-align:left;
+  }
+  .next-steps strong{ color: var(--navy); }
+
+  footer{
+    text-align:center;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    padding: 20px;
+  }
+
+  @media print{
+    header.top, footer, .no-print{ display:none !important; }
+    body{ background:#fff; }
+    main{ padding:0; max-width:none; }
+    .card{ box-shadow:none; border:none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Prueba de Conocimientos Básicos</h1>
+  <p>Disponible 24/7 · Puedes repetirla las veces que necesites</p>
+</header>
+
+<main>
+  <div class="card">
+
+    <!-- INTRO -->
+    <section id="screen-intro" class="screen active">
+      <h2>Antes de empezar</h2>
+      <p>Esta prueba evalúa conocimientos básicos en cinco áreas: Matemáticas, Lenguaje, Ciencias Naturales, Ciencias Sociales e Inglés. Tiene <strong>20 preguntas</strong> de selección múltiple y necesitas acertar al menos el <strong>70%</strong> para aprobar.</p>
+      <p>Si no apruebas, puedes volver a intentarlo de inmediato con un nuevo intento.</p>
+
+      <label class="field-label" for="input-name">Escribe tu nombre completo (aparecerá en tu constancia)</label>
+      <input type="text" id="input-name" placeholder="Nombre y apellidos" autocomplete="name">
+
+      <div class="actions">
+        <button id="btn-start" class="sans">Comenzar prueba</button>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="screen-quiz" class="screen">
+      <div class="progress-row">
+        <span id="progress-label">Pregunta 1 de 20</span>
+        <span id="progress-area">Matemáticas</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+
+      <p class="question-text" id="question-text"></p>
+      <div class="options" id="options-container"></div>
+
+      <div class="actions">
+        <button id="btn-next" class="sans" disabled>Siguiente</button>
+      </div>
+    </section>
+
+    <!-- RESULT: FAIL -->
+    <section id="screen-fail" class="screen">
+      <h2>Resultado de tu intento</h2>
+      <p class="result-score fail" id="fail-score">0%</p>
+      <p class="result-sub sans" id="fail-sub">No alcanzaste el puntaje mínimo (70%) esta vez.</p>
+
+      <div class="breakdown" id="fail-breakdown"></div>
+
+      <div class="actions">
+        <button id="btn-retry" class="sans">Intentar de nuevo</button>
+      </div>
+    </section>
+
+    <!-- RESULT: PASS / CERTIFICATE -->
+    <section id="screen-pass" class="screen">
+      <h2>¡Aprobaste!</h2>
+      <p class="result-score pass" id="pass-score">0%</p>
+
+      <div class="certificate" style="margin-top:24px;">
+        <div class="certificate-inner">
+          <p class="cert-eyebrow">Constancia de resultados</p>
+          <p class="cert-title">Prueba de Conocimientos Básicos</p>
+          <p class="cert-name" id="cert-name">—</p>
+          <p class="cert-body">Presentó y aprobó la Prueba de Conocimientos Básicos, cubriendo las áreas de Matemáticas, Lenguaje, Ciencias Naturales, Ciencias Sociales e Inglés.</p>
+
+          <div class="cert-meta">
+            <div>
+              <strong id="cert-score">0%</strong>
+              Puntaje obtenido
+            </div>
+            <div>
+              <strong id="cert-date">—</strong>
+              Fecha
+            </div>
+          </div>
+
+          <div class="seal">CONSTANCIA<br>DE RESULTADOS</div>
+        </div>
+      </div>
+
+      <div class="next-steps">
+        <strong>Para continuar el proceso:</strong> toma una captura de pantalla de esta constancia (con tu nombre, puntaje y fecha visibles) y envíanosla para recibir tu certificación.
+      </div>
+
+      <div class="actions no-print">
+        <button id="btn-print" class="sans secondary">Imprimir / guardar como PDF</button>
+        <button id="btn-restart" class="sans secondary">Volver al inicio</button>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>Prueba de autoevaluación de uso interno.</footer>
+
+<script>
+(function(){
+
+  const QUESTIONS = [
+    // Matemáticas
+    { area:"Matemáticas", q:"¿Cuánto es 8 × 7?", opts:["54", "56", "64", "48"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el 15% de 200?", opts:["20", "30", "15", "25"], correct:1 },
+    { area:"Matemáticas", q:"Si x + 5 = 12, ¿cuánto vale x?", opts:["5", "6", "7", "8"], correct:2 },
+    { area:"Matemáticas", q:"¿Cuál es el área de un rectángulo de 4 cm de base y 6 cm de altura?", opts:["10 cm²", "24 cm²", "20 cm²", "12 cm²"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál fracción es equivalente a 1/2?", opts:["2/5", "3/6", "4/9", "5/8"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es 9 × 9?", opts:["72", "81", "90", "99"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es 100 ÷ 4?", opts:["20", "25", "30", "40"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el valor decimal de 3/4?", opts:["0.34", "0.43", "0.75", "0.25"], correct:2 },
+    { area:"Matemáticas", q:"¿Cuál es el perímetro de un cuadrado de lado 5 cm?", opts:["10 cm", "15 cm", "20 cm", "25 cm"], correct:2 },
+    { area:"Matemáticas", q:"¿Cuánto es 12 - 7?", opts:["4", "5", "6", "7"], correct:1 },
+    { area:"Matemáticas", q:"Si un producto cuesta $40.000 y tiene un descuento del 10%, ¿cuál es el precio final?", opts:["$36.000", "$38.000", "$34.000", "$30.000"], correct:0 },
+    { area:"Matemáticas", q:"¿Cuál es el resultado de 2³?", opts:["6", "8", "9", "12"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es la raíz cuadrada de 81?", opts:["7", "8", "9", "10"], correct:2 },
+    { area:"Matemáticas", q:"Si 2x = 18, ¿cuánto vale x?", opts:["6", "9", "12", "16"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el área de un triángulo con base 10 cm y altura 6 cm?", opts:["60 cm²", "30 cm²", "16 cm²", "20 cm²"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es 3/5 + 1/5?", opts:["2/5", "4/5", "1", "3/10"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el mínimo común múltiplo de 4 y 6?", opts:["8", "12", "18", "24"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es 7 × 6?", opts:["36", "42", "48", "40"], correct:1 },
+    { area:"Matemáticas", q:"Un litro equivale a ¿cuántos mililitros?", opts:["100 ml", "1.000 ml", "10.000 ml", "10 ml"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el 50% de 300?", opts:["100", "150", "200", "50"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es 5² + 3²?", opts:["28", "34", "36", "40"], correct:1 },
+    { area:"Matemáticas", q:"Si un carro recorre 60 km en 1 hora, ¿cuántos km recorre en 3 horas a la misma velocidad?", opts:["120 km", "180 km", "200 km", "150 km"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el número primo entre estas opciones?", opts:["9", "7", "8", "10"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es 0.5 + 0.25?", opts:["0.65", "0.75", "0.7", "0.8"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el volumen de un cubo de lado 3 cm?", opts:["9 cm³", "18 cm³", "27 cm³", "6 cm³"], correct:2 },
+    { area:"Matemáticas", q:"¿Cuánto es 1/4 en porcentaje?", opts:["20%", "25%", "40%", "14%"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el resultado de -3 + 8?", opts:["-5", "5", "11", "-11"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuántos grados tiene un ángulo recto?", opts:["45°", "90°", "180°", "360°"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el promedio de 4, 6 y 8?", opts:["5", "6", "7", "9"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es 6 × 8?", opts:["42", "48", "54", "56"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es la fórmula para calcular el área de un círculo?", opts:["2πr", "πr²", "πd", "r²"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es 100 - 37?", opts:["63", "67", "73", "53"], correct:0 },
+    { area:"Matemáticas", q:"Si una docena tiene 12 unidades, ¿cuántas unidades hay en 5 docenas?", opts:["50", "60", "70", "55"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el resultado de 4! (4 factorial)?", opts:["16", "24", "12", "8"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es 2/3 de 90?", opts:["30", "60", "45", "50"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el número que sigue en la secuencia 2, 4, 8, 16, ___?", opts:["24", "32", "20", "18"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es 15 × 4?", opts:["45", "60", "50", "65"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el resultado de 3/4 - 1/4?", opts:["1/4", "1/2", "1", "2/4"], correct:1 },
+    { area:"Matemáticas", q:"Un ángulo de 180° se llama:", opts:["Agudo", "Recto", "Llano", "Obtuso"], correct:2 },
+    { area:"Matemáticas", q:"¿Cuánto es 9² ?", opts:["72", "81", "90", "99"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el resultado de dividir 144 entre 12?", opts:["12", "10", "14", "16"], correct:0 },
+    { area:"Matemáticas", q:"Si una pizza se divide en 8 partes iguales y comes 3, ¿qué fracción de la pizza comiste?", opts:["1/8", "3/8", "3/5", "5/8"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el equivalente de 1 kilómetro en metros?", opts:["100 m", "1.000 m", "10.000 m", "10 m"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es 7 + 8 × 2?", opts:["30", "23", "22", "15"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el complemento de un ángulo de 30°?", opts:["150°", "60°", "70°", "90°"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es 5/10 simplificado?", opts:["1/5", "1/2", "2/5", "5/1"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el resultado de 10² - 5²?", opts:["75", "50", "25", "100"], correct:0 },
+    { area:"Matemáticas", q:"Si 3 manzanas cuestan $1.500, ¿cuánto cuesta 1 manzana?", opts:["$300", "$500", "$450", "$600"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el número decimal equivalente a 1/8?", opts:["0.8", "0.18", "0.125", "0.008"], correct:2 },
+    { area:"Matemáticas", q:"¿Cuánto suman los ángulos internos de un triángulo?", opts:["90°", "180°", "270°", "360°"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el resultado de 6 × 7 - 10?", opts:["32", "42", "22", "37"], correct:0 },
+    { area:"Matemáticas", q:"Si el precio de un artículo sube de $20.000 a $25.000, ¿cuál fue el porcentaje de aumento?", opts:["25%", "20%", "15%", "30%"], correct:0 },
+    { area:"Matemáticas", q:"¿Cuánto es 2/5 + 1/5?", opts:["1/5", "3/5", "2/10", "1"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el perímetro de un rectángulo de 8 cm de largo y 3 cm de ancho?", opts:["11 cm", "22 cm", "24 cm", "18 cm"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuánto es 45 ÷ 9?", opts:["4", "5", "6", "9"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál es el resultado de elevar 10 al cuadrado?", opts:["10", "20", "100", "1000"], correct:2 },
+    { area:"Matemáticas", q:"¿Cuánto es la mitad de 250?", opts:["100", "125", "150", "50"], correct:1 },
+    { area:"Matemáticas", q:"Si un tren viaja a 80 km/h, ¿cuántos kilómetros recorre en media hora?", opts:["40 km", "80 km", "160 km", "20 km"], correct:0 },
+    { area:"Matemáticas", q:"¿Cuál es el resultado de 3 × (4 + 2)?", opts:["14", "18", "20", "24"], correct:1 },
+    { area:"Matemáticas", q:"¿Cuál de estas es una fracción impropia?", opts:["1/2", "3/4", "5/3", "2/5"], correct:2 },
+
+    // Lenguaje
+    { area:"Lenguaje", q:"¿Cuál palabra es un sinónimo de 'feliz'?", opts:["Triste", "Contento", "Enojado", "Cansado"], correct:1 },
+    { area:"Lenguaje", q:"En la oración 'El perro corre rápido', ¿cuál es el verbo?", opts:["El", "perro", "corre", "rápido"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál de estas palabras es un antónimo de 'grande'?", opts:["Enorme", "Amplio", "Pequeño", "Extenso"], correct:2 },
+    { area:"Lenguaje", q:"¿Qué signo de puntuación se usa al final de una pregunta?", opts:["Punto", "Coma", "Signo de interrogación", "Punto y coma"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál es el plural correcto de 'lápiz'?", opts:["Lapizes", "Lápizes", "Lápices", "Lapices"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál palabra está escrita correctamente?", opts:["Aver", "Haber", "Haber (con h)", "Aber"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál es el sujeto en la oración 'María compró pan'?", opts:["compró", "pan", "María", "compró pan"], correct:2 },
+    { area:"Lenguaje", q:"¿Cómo se llama la parte de la oración que expresa una acción?", opts:["Sustantivo", "Adjetivo", "Verbo", "Adverbio"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál palabra es un sustantivo?", opts:["Correr", "Rápido", "Perro", "Feliz"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál es un adjetivo en la frase 'La casa azul'?", opts:["La", "casa", "azul", "ninguna"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál es el sinónimo de 'rápido'?", opts:["Lento", "Veloz", "Pesado", "Tranquilo"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál es el antónimo de 'oscuro'?", opts:["Sombrío", "Negro", "Claro", "Opaco"], correct:2 },
+    { area:"Lenguaje", q:"¿Qué tipo de texto narra hechos reales en orden cronológico?", opts:["Poema", "Texto histórico", "Receta", "Fábula"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál es la función principal de una coma?", opts:["Terminar una idea", "Separar elementos dentro de una oración", "Indicar una pregunta", "Indicar sorpresa"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál palabra lleva tilde?", opts:["Camion", "Camión", "Sin tilde", "Camio"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál es el género literario al que pertenece 'Cien años de soledad'?", opts:["Poesía", "Novela", "Ensayo", "Teatro"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál de estas es una oración exclamativa?", opts:["¿Cómo estás?", "¡Qué alegría verte!", "Hoy es lunes.", "Ven aquí."], correct:1 },
+    { area:"Lenguaje", q:"¿Qué es un sinónimo?", opts:["Palabra con significado similar a otra", "Palabra con significado opuesto", "Palabra sin significado", "Palabra que rima"], correct:0 },
+    { area:"Lenguaje", q:"¿Cuál es el diminutivo de 'perro'?", opts:["Perrote", "Perrito", "Perraza", "Perral"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál palabra está mal escrita?", opts:["Exhausto", "Esagerado", "Extraño", "Exquisito"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál es el tiempo verbal de 'comí'?", opts:["Presente", "Pretérito", "Futuro", "Condicional"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál es el aumentativo de 'casa'?", opts:["Casita", "Casona", "Casero", "Casorio"], correct:1 },
+    { area:"Lenguaje", q:"¿Qué figura literaria compara dos elementos usando 'como'?", opts:["Metáfora", "Símil", "Hipérbole", "Personificación"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál palabra es aguda?", opts:["Árbol", "Fácil", "Camión", "Lápiz"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál es el sinónimo de 'comenzar'?", opts:["Terminar", "Iniciar", "Detener", "Pausar"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál oración está en voz pasiva?", opts:["La casa fue construida por el arquitecto", "El arquitecto construyó la casa", "El arquitecto construye casas", "Construir es su trabajo"], correct:0 },
+    { area:"Lenguaje", q:"¿Qué es un artículo determinado?", opts:["Un, una", "El, la, los, las", "Este, esta", "Mi, tu, su"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál palabra es esdrújula?", opts:["Camión", "Fácil", "Médico", "Pared"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál es el antónimo de 'comprar'?", opts:["Adquirir", "Obtener", "Vender", "Pagar"], correct:2 },
+    { area:"Lenguaje", q:"¿Qué es una metáfora?", opts:["Comparación implícita sin usar 'como'", "Comparación explícita con 'como'", "Repetición de sonidos", "Exageración"], correct:0 },
+    { area:"Lenguaje", q:"¿Cuál palabra funciona como conjunción?", opts:["Casa", "Corre", "Y", "Azul"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál es el plural de 'canción'?", opts:["Cancions", "Canciones", "Cancion", "Cansiones"], correct:1 },
+    { area:"Lenguaje", q:"¿Qué tipo de texto tiene como fin informar de manera objetiva?", opts:["Cuento", "Poema", "Texto expositivo", "Novela"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál es el sinónimo de 'triste'?", opts:["Alegre", "Contento", "Apenado", "Feliz"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál de estas palabras es un pronombre?", opts:["Casa", "Corriendo", "Ella", "Rápido"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál es la correcta separación en sílabas de 'computadora'?", opts:["Com-pu-ta-do-ra", "Compu-ta-dora", "Com-puta-dora", "Comput-a-dora"], correct:0 },
+    { area:"Lenguaje", q:"¿Qué es un antónimo?", opts:["Palabra similar", "Palabra de significado opuesto", "Palabra que rima", "Palabra compuesta"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál palabra usa correctamente la 'b'?", opts:["Escribir", "Escrivir", "Esscribir", "Escribbir"], correct:0 },
+    { area:"Lenguaje", q:"¿Cuál es el sujeto tácito en 'Fui al mercado'?", opts:["Tú", "Él", "Yo", "Nosotros"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál de estas oraciones usa correctamente los signos de puntuación?", opts:["Hola, ¿cómo estás?", "Hola cómo, estás", "Hola? cómo estás", "Hola cómo estás."], correct:0 },
+    { area:"Lenguaje", q:"¿Qué es una hipérbole?", opts:["Comparación", "Exageración de una idea", "Personificación", "Rima"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál palabra es grave o llana?", opts:["Camión", "Árbol", "Café", "Sofá"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál es el sinónimo de 'hermoso'?", opts:["Feo", "Bello", "Desagradable", "Común"], correct:1 },
+    { area:"Lenguaje", q:"¿Qué elemento indica el lugar y tiempo de una narración?", opts:["Personajes", "Ambiente", "Diálogo", "Clímax"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál palabra lleva diéresis?", opts:["Pingüino", "Pinguino", "Guitarra", "Guerra"], correct:0 },
+    { area:"Lenguaje", q:"¿Cuál oración usa correctamente 'haber'?", opts:["Debe haber comida", "Debe aver comida", "Debe a ver comida", "Deve haber comida"], correct:0 },
+    { area:"Lenguaje", q:"¿Cuál es un ejemplo de conjunción adversativa?", opts:["Y", "O", "Pero", "Ni"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál palabra tiene un diptongo?", opts:["Aire", "Camino", "Pared", "Reloj"], correct:0 },
+    { area:"Lenguaje", q:"¿Cuál es el sinónimo de 'difícil'?", opts:["Fácil", "Sencillo", "Complicado", "Simple"], correct:2 },
+    { area:"Lenguaje", q:"¿Qué figura literaria da cualidades humanas a objetos?", opts:["Símil", "Hipérbole", "Personificación", "Metáfora"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál palabra está bien acentuada?", opts:["Arbol", "Árbol", "Arból", "Àrbol"], correct:1 },
+    { area:"Lenguaje", q:"¿Qué tipo de narrador conoce los pensamientos de todos los personajes?", opts:["Narrador testigo", "Narrador protagonista", "Narrador omnisciente", "Narrador objetivo"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál es el antónimo de 'ordenado'?", opts:["Organizado", "Limpio", "Desordenado", "Cuidadoso"], correct:2 },
+    { area:"Lenguaje", q:"¿Cuál oración es correcta ortográficamente?", opts:["A veces llego tarde", "Aveses llego tarde", "Abeses llego tarde", "A vezes llego tarde"], correct:0 },
+    { area:"Lenguaje", q:"¿Cuál es el sinónimo de 'amable'?", opts:["Grosero", "Cordial", "Frío", "Distante"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál palabra es un adverbio de tiempo?", opts:["Aquí", "Ayer", "Lentamente", "Bien"], correct:1 },
+    { area:"Lenguaje", q:"¿Qué signo se usa para indicar una cita textual?", opts:["Paréntesis", "Comillas", "Guion", "Punto y coma"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál es el sinónimo de 'construir'?", opts:["Destruir", "Edificar", "Derribar", "Demoler"], correct:1 },
+    { area:"Lenguaje", q:"¿Cuál palabra tiene un hiato?", opts:["Poeta", "Aire", "Cielo", "Cuatro"], correct:0 },
+    { area:"Lenguaje", q:"¿Cuál es un conector que indica causa?", opts:["Sin embargo", "Porque", "Además", "Después"], correct:1 },
+
+    // Ciencias Naturales
+    { area:"Ciencias Naturales", q:"¿Cuál es el órgano principal del sistema circulatorio?", opts:["Pulmón", "Corazón", "Riñón", "Hígado"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué gas necesitan las plantas para hacer la fotosíntesis?", opts:["Oxígeno", "Nitrógeno", "Dióxido de carbono", "Hidrógeno"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el estado del agua a 0°C?", opts:["Líquido", "Gaseoso", "Sólido", "Plasma"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Cuál de estos es un ser vivo?", opts:["Roca", "Hongo", "Agua", "Aire"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué planeta es conocido como el planeta rojo?", opts:["Venus", "Marte", "Júpiter", "Saturno"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es la unidad básica de los seres vivos?", opts:["Átomo", "Célula", "Molécula", "Tejido"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el gas que respiramos y necesitamos para vivir?", opts:["Dióxido de carbono", "Nitrógeno", "Oxígeno", "Hidrógeno"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Cuántos huesos tiene aproximadamente el cuerpo humano adulto?", opts:["150", "206", "300", "100"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el órgano encargado de filtrar la sangre y producir orina?", opts:["Hígado", "Riñón", "Pulmón", "Estómago"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué tipo de animal es una rana?", opts:["Reptil", "Mamífero", "Anfibio", "Ave"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Cuál es la fuente principal de energía para la Tierra?", opts:["La Luna", "El Sol", "El viento", "El agua"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué proceso permite a las plantas producir su propio alimento?", opts:["Respiración", "Fotosíntesis", "Digestión", "Transpiración"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el estado del agua cuando hierve a 100°C?", opts:["Sólido", "Líquido", "Gaseoso", "Plasma"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el planeta más grande del sistema solar?", opts:["Tierra", "Marte", "Júpiter", "Neptuno"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Qué órgano bombea la sangre por todo el cuerpo?", opts:["Pulmón", "Corazón", "Cerebro", "Hígado"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es la función principal de los pulmones?", opts:["Digerir alimentos", "Intercambiar oxígeno y dióxido de carbono", "Filtrar la sangre", "Producir hormonas"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál de estos es un mamífero?", opts:["Tiburón", "Delfín", "Águila", "Serpiente"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué es la fuerza que atrae los objetos hacia la Tierra?", opts:["Magnetismo", "Gravedad", "Fricción", "Presión"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el nombre del proceso por el cual el agua pasa de líquido a vapor?", opts:["Condensación", "Evaporación", "Solidificación", "Fusión"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el órgano encargado de la digestión de los alimentos junto con el intestino?", opts:["Pulmón", "Riñón", "Estómago", "Corazón"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Qué tipo de energía proviene del sol?", opts:["Eólica", "Solar", "Hidráulica", "Geotérmica"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el hueso más largo del cuerpo humano?", opts:["Húmero", "Fémur", "Tibia", "Radio"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué parte de la célula contiene el material genético?", opts:["Citoplasma", "Membrana", "Núcleo", "Mitocondria"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el satélite natural de la Tierra?", opts:["Marte", "La Luna", "Venus", "Sol"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué tipo de ecosistema tiene poca lluvia y temperaturas extremas?", opts:["Selva", "Desierto", "Bosque", "Pantano"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es la función de la clorofila en las plantas?", opts:["Absorber agua", "Captar la luz solar para la fotosíntesis", "Producir semillas", "Absorber nutrientes del suelo"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el principal componente del aire que respiramos?", opts:["Oxígeno", "Nitrógeno", "Dióxido de carbono", "Hidrógeno"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué animal es conocido por hacer metamorfosis de oruga a mariposa?", opts:["Escarabajo", "Mariposa", "Hormiga", "Abeja"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el proceso de reproducción en el que interviene un óvulo y un espermatozoide?", opts:["Asexual", "Sexual", "Fotosíntesis", "Fermentación"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué instrumento se usa para medir la temperatura?", opts:["Barómetro", "Termómetro", "Higrómetro", "Anemómetro"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el nombre de la capa de gases que rodea la Tierra?", opts:["Litosfera", "Hidrosfera", "Atmósfera", "Biosfera"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el proceso por el cual el cuerpo obtiene energía de los alimentos?", opts:["Fotosíntesis", "Respiración celular", "Excreción", "Circulación"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué tipo de roca se forma por el enfriamiento del magma?", opts:["Sedimentaria", "Ígnea", "Metamórfica", "Caliza"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el órgano del sistema nervioso que controla el cuerpo?", opts:["Corazón", "Cerebro", "Hígado", "Pulmón"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el gas responsable del efecto invernadero en mayor proporción?", opts:["Oxígeno", "Dióxido de carbono", "Nitrógeno", "Helio"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué tipo de animales ponen huevos?", opts:["Mamíferos", "Aves", "Solo peces", "Solo insectos"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es la estrella más cercana a la Tierra?", opts:["Sirio", "El Sol", "Alfa Centauri", "Betelgeuse"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué parte de la planta absorbe el agua y los nutrientes del suelo?", opts:["Hojas", "Flores", "Raíces", "Tallo"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el nombre del proceso de división celular para el crecimiento y reparación de tejidos?", opts:["Meiosis", "Mitosis", "Fotosíntesis", "Ósmosis"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el ciclo que describe el movimiento continuo del agua en la naturaleza?", opts:["Ciclo del carbono", "Ciclo del agua", "Ciclo del nitrógeno", "Ciclo de las rocas"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué tipo de energía se produce por el movimiento del agua?", opts:["Solar", "Eólica", "Hidráulica", "Geotérmica"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el sentido relacionado con los ojos?", opts:["Oído", "Tacto", "Vista", "Olfato"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Qué animal es un ejemplo de reptil?", opts:["Rana", "Cocodrilo", "Delfín", "Águila"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es la función principal de los glóbulos rojos?", opts:["Combatir infecciones", "Transportar oxígeno", "Coagular la sangre", "Producir hormonas"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué elemento químico es esencial para la respiración humana?", opts:["Carbono", "Nitrógeno", "Oxígeno", "Hierro"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el nombre de la fuerza que hace que los objetos floten en el agua?", opts:["Gravedad", "Flotabilidad (empuje)", "Fricción", "Tensión"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué tipo de bosque se caracteriza por su gran biodiversidad y clima cálido húmedo?", opts:["Bosque templado", "Selva tropical", "Taiga", "Bosque seco"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el proceso por el cual un líquido se convierte en sólido?", opts:["Fusión", "Evaporación", "Solidificación", "Sublimación"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Qué órgano produce la insulina en el cuerpo humano?", opts:["Hígado", "Páncreas", "Riñón", "Bazo"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el nombre científico del proceso de eliminación de desechos del cuerpo?", opts:["Digestión", "Respiración", "Excreción", "Circulación"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Qué tipo de fuente de energía no se agota con el uso, como el sol o el viento?", opts:["No renovable", "Renovable", "Fósil", "Nuclear"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el nombre de la unión de dos o más átomos?", opts:["Célula", "Molécula", "Tejido", "Órgano"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué animal es un ejemplo de artrópodo?", opts:["Perro", "Rana", "Araña", "Delfín"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el proceso mediante el cual las plantas liberan vapor de agua a través de sus hojas?", opts:["Fotosíntesis", "Transpiración", "Respiración", "Absorción"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el nombre de la capa sólida más externa de la Tierra?", opts:["Núcleo", "Manto", "Corteza", "Atmósfera"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Qué tipo de sangre se considera donante universal?", opts:["A positivo", "AB positivo", "O negativo", "B positivo"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Cuál es la principal función del sistema inmunológico?", opts:["Digerir alimentos", "Transportar oxígeno", "Defender al cuerpo de enfermedades", "Regular la temperatura"], correct:2 },
+    { area:"Ciencias Naturales", q:"¿Qué instrumento se usa para observar objetos muy pequeños, como células?", opts:["Telescopio", "Microscopio", "Binoculares", "Lupa solamente"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Cuál es el nombre del fenómeno en el que la Tierra gira alrededor del Sol?", opts:["Rotación", "Traslación", "Revolución lunar", "Eclipse"], correct:1 },
+    { area:"Ciencias Naturales", q:"¿Qué gas producen las plantas durante la fotosíntesis?", opts:["Dióxido de carbono", "Nitrógeno", "Oxígeno", "Hidrógeno"], correct:2 },
+
+    // Ciencias Sociales
+    { area:"Ciencias Sociales", q:"¿Cuál es la capital de Colombia?", opts:["Medellín", "Cali", "Bogotá", "Barranquilla"], correct:2 },
+    { area:"Ciencias Sociales", q:"¿En qué continente se encuentra Colombia?", opts:["América", "Europa", "Asia", "África"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Quién es considerado el libertador de varios países suramericanos, incluida Colombia?", opts:["Francisco de Paula Santander", "Simón Bolívar", "José de San Martín", "Antonio Nariño"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cómo se llama la forma de gobierno en la que el pueblo elige a sus gobernantes mediante el voto?", opts:["Monarquía", "Dictadura", "Democracia", "Oligarquía"], correct:2 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el océano que baña la costa pacífica de Colombia?", opts:["Atlántico", "Índico", "Pacífico", "Ártico"], correct:2 },
+    { area:"Ciencias Sociales", q:"¿En qué año se dio la independencia de Colombia (Grito de independencia)?", opts:["1800", "1810", "1820", "1830"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es la moneda oficial de Colombia?", opts:["Dólar", "Peso colombiano", "Euro", "Bolívar"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuántas ramas del poder público existen en Colombia?", opts:["2", "3", "4", "5"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el río más largo de Colombia?", opts:["Río Cauca", "Río Magdalena", "Río Amazonas", "Río Atrato"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del documento que rige las normas fundamentales de un país?", opts:["Código Civil", "Constitución Política", "Manual de convivencia", "Decreto"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el continente más grande del mundo?", opts:["África", "Asia", "América", "Europa"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Quién es el jefe de Estado y de gobierno en Colombia?", opts:["El alcalde", "El gobernador", "El presidente", "El senador"], correct:2 },
+    { area:"Ciencias Sociales", q:"¿Cuál es la región de Colombia donde se encuentra el desierto de la Tajamar (La Guajira)?", opts:["Andina", "Pacífica", "Caribe", "Orinoquía"], correct:2 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el país más extenso de Suramérica?", opts:["Argentina", "Colombia", "Brasil", "Perú"], correct:2 },
+    { area:"Ciencias Sociales", q:"¿Qué cordillera atraviesa gran parte del territorio colombiano?", opts:["Cordillera del Himalaya", "Cordillera de los Andes", "Cordillera de los Alpes", "Cordillera del Atlas"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del tratado o acuerdo que busca la resolución de conflictos entre países mediante el diálogo?", opts:["Guerra", "Diplomacia", "Invasión", "Bloqueo"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es la capital de Estados Unidos?", opts:["Nueva York", "Washington D.C.", "Los Ángeles", "Chicago"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Qué entidad se encarga de organizar las elecciones en Colombia?", opts:["Registraduría Nacional", "Alcaldía", "Contraloría", "Fiscalía"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del fenómeno social que ocurre cuando un grupo de personas migra de un país a otro?", opts:["Urbanización", "Migración", "Colonización", "Globalización"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es la capital de Francia?", opts:["Londres", "Roma", "París", "Berlín"], correct:2 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del órgano legislativo de Colombia?", opts:["Corte Suprema", "Congreso de la República", "Consejo de Estado", "Consejo de Ministros"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Qué es la globalización?", opts:["El proceso de integración económica y cultural entre países", "Un tipo de gobierno", "Una ley colombiana", "Un fenómeno natural"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el país más poblado del mundo?", opts:["Estados Unidos", "Brasil", "India", "Rusia"], correct:2 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del máximo tribunal de justicia en Colombia para asuntos ordinarios?", opts:["Corte Suprema de Justicia", "Corte Constitucional", "Fiscalía General", "Procuraduría"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es la región natural de Colombia conocida por sus llanuras y ganadería?", opts:["Amazonía", "Andina", "Orinoquía", "Pacífica"], correct:2 },
+    { area:"Ciencias Sociales", q:"¿Qué evento histórico marcó el fin de la Segunda Guerra Mundial?", opts:["La Revolución Francesa", "La rendición de Japón en 1945", "La caída del Muro de Berlín", "La independencia de India"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del sistema económico basado en la propiedad privada y el libre mercado?", opts:["Comunismo", "Capitalismo", "Socialismo", "Feudalismo"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es la capital de España?", opts:["Barcelona", "Madrid", "Sevilla", "Valencia"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del proceso mediante el cual las personas de una región dejan el campo para vivir en la ciudad?", opts:["Urbanización", "Migración internacional", "Ruralización", "Colonización"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Qué es una democracia representativa?", opts:["Un sistema donde el pueblo elige representantes para gobernar", "Un sistema donde gobierna un solo líder sin elecciones", "Un sistema militar", "Un sistema religioso"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el continente donde se encuentra Egipto?", opts:["Asia", "África", "Europa", "Oceanía"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del organismo internacional encargado de mantener la paz mundial?", opts:["Organización de las Naciones Unidas (ONU)", "OTAN", "Unión Europea", "OMS"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es la lengua oficial de Colombia?", opts:["Inglés", "Español", "Portugués", "Francés"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Qué es el PIB (Producto Interno Bruto)?", opts:["El valor total de bienes y servicios producidos en un país", "El número de habitantes de un país", "El presupuesto del gobierno", "La tasa de desempleo"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el país conocido como 'la tierra del sol naciente'?", opts:["China", "Japón", "Corea del Sur", "Tailandia"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del tratado que dio origen a la Unión Europea?", opts:["Tratado de Versalles", "Tratado de Roma", "Tratado de Maastricht solamente", "Tratado de París"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Qué es una monarquía?", opts:["Un sistema de gobierno encabezado por un rey o reina", "Un sistema donde gobierna el pueblo directamente", "Un sistema militar", "Un sistema sin gobierno"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el desierto más grande del mundo?", opts:["Desierto de Atacama", "Desierto del Sahara", "Desierto de Gobi", "Desierto de Kalahari"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del fenómeno económico caracterizado por el aumento generalizado de precios?", opts:["Recesión", "Inflación", "Deflación", "Devaluación"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es la capital de Italia?", opts:["Milán", "Roma", "Venecia", "Nápoles"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Qué es la división de poderes en un Estado?", opts:["La separación del poder en ramas ejecutiva, legislativa y judicial", "La división del territorio en departamentos", "La separación de la iglesia y el estado", "La división del ejército"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el océano más grande del mundo?", opts:["Atlántico", "Índico", "Pacífico", "Ártico"], correct:2 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del fenómeno migratorio que consiste en salir de un país por conflictos o persecución?", opts:["Turismo", "Desplazamiento forzado / refugio", "Migración laboral", "Colonización"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el país con mayor extensión territorial del mundo?", opts:["China", "Canadá", "Rusia", "Estados Unidos"], correct:2 },
+    { area:"Ciencias Sociales", q:"¿Qué es el sufragio?", opts:["El derecho al voto", "El derecho a la educación", "El derecho a la salud", "El derecho al trabajo"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es la capital de Reino Unido?", opts:["Manchester", "Londres", "Liverpool", "Edimburgo"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del proceso histórico en el que España colonizó gran parte de América?", opts:["Independencia", "Conquista y colonización", "Revolución industrial", "Globalización"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Qué es un tratado internacional?", opts:["Un acuerdo formal entre dos o más países", "Una ley interna de un país", "Un decreto presidencial", "Una sentencia judicial"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el continente más pequeño del mundo?", opts:["África", "Oceanía", "Europa", "Asia"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del organismo encargado de vigilar el manejo de los recursos públicos en Colombia?", opts:["Registraduría", "Contraloría General de la República", "Fiscalía", "Defensoría del Pueblo"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Qué es la Revolución Industrial?", opts:["Un proceso de transformación económica basado en la industrialización y las máquinas", "Un movimiento artístico", "Una guerra mundial", "Un tratado de paz"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es la capital de Alemania?", opts:["Múnich", "Berlín", "Frankfurt", "Hamburgo"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del fenómeno en el que un país produce más de lo que consume y vende el excedente a otros países?", opts:["Importación", "Exportación", "Contrabando", "Devaluación"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Qué entidad protege los derechos humanos en Colombia?", opts:["Defensoría del Pueblo", "Alcaldía", "Ministerio de Hacienda", "Banco de la República"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el país que limita con Colombia al oriente?", opts:["Ecuador", "Perú", "Venezuela", "Panamá"], correct:2 },
+    { area:"Ciencias Sociales", q:"¿Qué es una dictadura?", opts:["Un sistema de gobierno donde el poder se concentra en una sola persona sin elecciones libres", "Un sistema donde el pueblo elige a sus gobernantes", "Un sistema con varios partidos políticos", "Un sistema federal"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es la capital de Rusia?", opts:["San Petersburgo", "Moscú", "Kiev", "Minsk"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del fenómeno por el cual sube el nivel del mar debido al calentamiento global?", opts:["Erosión", "Aumento del nivel del mar", "Sequía", "Desertificación"], correct:1 },
+    { area:"Ciencias Sociales", q:"¿Qué países conforman América del Norte?", opts:["Estados Unidos, Canadá y México", "Brasil, Argentina y Chile", "España, Francia e Italia", "China, Japón y Corea"], correct:0 },
+    { area:"Ciencias Sociales", q:"¿Cuál es el nombre del proceso de creación de leyes en un país?", opts:["Ejecución", "Función legislativa", "Sentencia judicial", "Elección popular"], correct:1 },
+
+    // Inglés
+    { area:"Inglés", q:"¿Cómo se dice 'casa' en inglés?", opts:["Car", "House", "Tree", "Book"], correct:1 },
+    { area:"Inglés", q:"Completa: 'I ___ a student.'", opts:["is", "are", "am", "be"], correct:2 },
+    { area:"Inglés", q:"¿Cuál es el plural de 'child' en inglés?", opts:["Childs", "Children", "Childes", "Childrens"], correct:1 },
+    { area:"Inglés", q:"¿Qué significa 'yesterday' en español?", opts:["Mañana", "Hoy", "Ayer", "Semana"], correct:2 },
+    { area:"Inglés", q:"¿Cómo se traduce 'She is reading a book'?", opts:["Ella está leyendo un libro", "Ella lee un libro", "Ella leyó un libro", "Ella va a leer un libro"], correct:0 },
+    { area:"Inglés", q:"¿Cómo se dice 'perro' en inglés?", opts:["Cat", "Dog", "Bird", "Fish"], correct:1 },
+    { area:"Inglés", q:"Completa: 'They ___ playing football.'", opts:["is", "are", "am", "be"], correct:1 },
+    { area:"Inglés", q:"¿Qué significa 'water' en español?", opts:["Fuego", "Tierra", "Agua", "Aire"], correct:2 },
+    { area:"Inglés", q:"¿Cuál es el pasado del verbo 'go'?", opts:["Goed", "Gone", "Went", "Going"], correct:2 },
+    { area:"Inglés", q:"¿Cómo se dice 'gracias' en inglés?", opts:["Please", "Sorry", "Thank you", "Excuse me"], correct:2 },
+    { area:"Inglés", q:"¿Qué significa 'friend' en español?", opts:["Enemigo", "Amigo", "Familia", "Vecino"], correct:1 },
+    { area:"Inglés", q:"Completa: 'He ___ my brother.'", opts:["is", "are", "am", "be"], correct:0 },
+    { area:"Inglés", q:"¿Cómo se dice 'escuela' en inglés?", opts:["Home", "Park", "School", "Store"], correct:2 },
+    { area:"Inglés", q:"¿Cuál es el plural de 'mouse' (ratón)?", opts:["Mouses", "Mice", "Mouse", "Mices"], correct:1 },
+    { area:"Inglés", q:"¿Qué significa 'today' en español?", opts:["Ayer", "Hoy", "Mañana", "Nunca"], correct:1 },
+    { area:"Inglés", q:"¿Cómo se dice 'buenos días' en inglés?", opts:["Good night", "Good afternoon", "Good morning", "Goodbye"], correct:2 },
+    { area:"Inglés", q:"Completa: 'I have ___ apples.'", opts:["two", "second", "twice", "too"], correct:0 },
+    { area:"Inglés", q:"¿Qué significa 'work' en español?", opts:["Jugar", "Trabajar", "Dormir", "Comer"], correct:1 },
+    { area:"Inglés", q:"¿Cómo se dice 'rojo' en inglés?", opts:["Blue", "Green", "Red", "Yellow"], correct:2 },
+    { area:"Inglés", q:"¿Cuál es la forma correcta: 'She ___ to the market every day.'?", opts:["go", "goes", "going", "gone"], correct:1 },
+    { area:"Inglés", q:"¿Qué significa 'happy' en español?", opts:["Triste", "Enojado", "Feliz", "Cansado"], correct:2 },
+    { area:"Inglés", q:"¿Cómo se dice 'libro' en inglés?", opts:["Table", "Chair", "Book", "Pen"], correct:2 },
+    { area:"Inglés", q:"Completa: 'We ___ from Colombia.'", opts:["is", "are", "am", "be"], correct:1 },
+    { area:"Inglés", q:"¿Qué significa 'to eat' en español?", opts:["Beber", "Dormir", "Comer", "Correr"], correct:2 },
+    { area:"Inglés", q:"¿Cuál es el comparativo de 'big' (grande)?", opts:["Bigger", "Biggest", "More big", "Big-er"], correct:0 },
+    { area:"Inglés", q:"¿Cómo se dice 'familia' en inglés?", opts:["Friend", "Family", "People", "Neighbor"], correct:1 },
+    { area:"Inglés", q:"¿Qué significa 'to sleep' en español?", opts:["Comer", "Correr", "Dormir", "Hablar"], correct:2 },
+    { area:"Inglés", q:"¿Cuál es el plural de 'city'?", opts:["Citys", "Cities", "City's", "Cityes"], correct:1 },
+    { area:"Inglés", q:"¿Cómo se dice 'trabajo' (sustantivo) en inglés?", opts:["Play", "Job / Work", "Rest", "Sleep"], correct:1 },
+    { area:"Inglés", q:"Completa: 'This is ___ book.'", opts:["my", "I", "me", "mine is"], correct:0 },
+    { area:"Inglés", q:"¿Qué significa 'to speak' en español?", opts:["Escuchar", "Leer", "Hablar", "Escribir"], correct:2 },
+    { area:"Inglés", q:"¿Cómo se dice 'semana' en inglés?", opts:["Day", "Month", "Week", "Year"], correct:2 },
+    { area:"Inglés", q:"¿Cuál es el superlativo de 'good' (bueno)?", opts:["Gooder", "Most good", "Best", "Better"], correct:2 },
+    { area:"Inglés", q:"¿Qué significa 'to write' en español?", opts:["Leer", "Escribir", "Hablar", "Cantar"], correct:1 },
+    { area:"Inglés", q:"¿Cómo se dice 'mesa' en inglés?", opts:["Chair", "Table", "Door", "Window"], correct:1 },
+    { area:"Inglés", q:"Completa: 'She doesn't ___ coffee.'", opts:["likes", "like", "liking", "liked"], correct:1 },
+    { area:"Inglés", q:"¿Qué significa 'to listen' en español?", opts:["Hablar", "Escuchar", "Ver", "Oler"], correct:1 },
+    { area:"Inglés", q:"¿Cómo se dice 'ventana' en inglés?", opts:["Door", "Wall", "Window", "Roof"], correct:2 },
+    { area:"Inglés", q:"¿Cuál es el pasado del verbo 'to be' para 'I'?", opts:["was", "were", "is", "am"], correct:0 },
+    { area:"Inglés", q:"¿Qué significa 'to run' en español?", opts:["Caminar", "Saltar", "Correr", "Nadar"], correct:2 },
+    { area:"Inglés", q:"¿Cómo se dice 'puerta' en inglés?", opts:["Window", "Door", "Floor", "Wall"], correct:1 },
+    { area:"Inglés", q:"Completa: 'There ___ many people at the party.'", opts:["is", "were", "was", "be"], correct:1 },
+    { area:"Inglés", q:"¿Qué significa 'to buy' en español?", opts:["Vender", "Comprar", "Regalar", "Prestar"], correct:1 },
+    { area:"Inglés", q:"¿Cómo se dice 'dinero' en inglés?", opts:["Time", "Money", "Job", "Bank"], correct:1 },
+    { area:"Inglés", q:"¿Cuál es el plural de 'man'?", opts:["Mans", "Men", "Mens", "Man's"], correct:1 },
+    { area:"Inglés", q:"¿Qué significa 'to sell' en español?", opts:["Comprar", "Vender", "Pagar", "Ahorrar"], correct:1 },
+    { area:"Inglés", q:"¿Cómo se dice 'ciudad' en inglés?", opts:["Country", "Town", "City", "Village"], correct:2 },
+    { area:"Inglés", q:"Completa: 'He can ___ very well.'", opts:["swim", "to swim", "swimming", "swims"], correct:0 },
+    { area:"Inglés", q:"¿Qué significa 'to drink' en español?", opts:["Comer", "Beber", "Cocinar", "Servir"], correct:1 },
+    { area:"Inglés", q:"¿Cómo se dice 'noche' en inglés?", opts:["Morning", "Afternoon", "Night", "Day"], correct:2 },
+    { area:"Inglés", q:"¿Cuál es la forma correcta de negar: 'I ___ like pizza.'?", opts:["not like", "don't like", "doesn't like", "no like"], correct:1 },
+    { area:"Inglés", q:"¿Qué significa 'to study' en español?", opts:["Jugar", "Descansar", "Estudiar", "Viajar"], correct:2 },
+    { area:"Inglés", q:"¿Cómo se dice 'año' en inglés?", opts:["Day", "Month", "Week", "Year"], correct:3 },
+    { area:"Inglés", q:"Completa: 'Where ___ you live?'", opts:["do", "does", "is", "are"], correct:0 },
+    { area:"Inglés", q:"¿Qué significa 'to travel' en español?", opts:["Trabajar", "Viajar", "Estudiar", "Descansar"], correct:1 },
+    { area:"Inglés", q:"¿Cómo se dice 'comida' en inglés?", opts:["Drink", "Food", "Plate", "Cook"], correct:1 },
+    { area:"Inglés", q:"¿Cuál es la forma correcta: 'What time ___ it?'", opts:["is", "are", "does", "do"], correct:0 },
+    { area:"Inglés", q:"¿Qué significa 'to help' en español?", opts:["Molestar", "Ayudar", "Ignorar", "Perder"], correct:1 },
+    { area:"Inglés", q:"¿Cómo se dice 'flor' en inglés?", opts:["Tree", "Leaf", "Flower", "Grass"], correct:2 },
+    { area:"Inglés", q:"Completa: 'My favorite color is ___ .'", opts:["blue", "bluely", "bluer", "bluish only"], correct:0 },
+  ];
+
+  const PASS_THRESHOLD = 0.70;
+
+  let currentQuestions = [];
+  let currentIndex = 0;
+  let selectedOption = null;
+  let userAnswers = [];
+  let candidateName = "";
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  function pickQuestionSet(){
+    // group by area, take 4 random from each of the 5 areas = 20 total
+    const areas = [...new Set(QUESTIONS.map(q=>q.area))];
+    let set = [];
+    areas.forEach(area=>{
+      const pool = shuffle(QUESTIONS.filter(q=>q.area===area));
+      set = set.concat(pool.slice(0,4));
+    });
+    return shuffle(set);
+  }
+
+  function showScreen(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function startQuiz(){
+    candidateName = document.getElementById('input-name').value.trim();
+    if(!candidateName){
+      document.getElementById('input-name').focus();
+      document.getElementById('input-name').style.borderColor = '#B23A2E';
+      return;
+    }
+    currentQuestions = pickQuestionSet();
+    currentIndex = 0;
+    userAnswers = [];
+    showScreen('screen-quiz');
+    renderQuestion();
+  }
+
+  function renderQuestion(){
+    selectedOption = null;
+    const total = currentQuestions.length;
+    const q = currentQuestions[currentIndex];
+
+    document.getElementById('progress-label').textContent = `Pregunta ${currentIndex+1} de ${total}`;
+    document.getElementById('progress-area').textContent = q.area;
+    document.getElementById('progress-fill').style.width = `${(currentIndex/total)*100}%`;
+    document.getElementById('question-text').textContent = q.q;
+
+    const container = document.getElementById('options-container');
+    container.innerHTML = '';
+    q.opts.forEach((opt, idx)=>{
+      const div = document.createElement('label');
+      div.className = 'option';
+      div.innerHTML = `<input type="radio" name="opt" value="${idx}"> <span>${opt}</span>`;
+      div.addEventListener('click', ()=>selectOption(idx, div));
+      container.appendChild(div);
+    });
+
+    document.getElementById('btn-next').disabled = true;
+    document.getElementById('btn-next').textContent = (currentIndex === total-1) ? 'Ver resultado' : 'Siguiente';
+  }
+
+  function selectOption(idx, el){
+    document.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+    selectedOption = idx;
+    document.getElementById('btn-next').disabled = false;
+  }
+
+  function nextQuestion(){
+    const q = currentQuestions[currentIndex];
+    userAnswers.push({
+      area: q.area,
+      question: q.q,
+      correct: selectedOption === q.correct
+    });
+
+    if(currentIndex < currentQuestions.length - 1){
+      currentIndex++;
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  }
+
+  function finishQuiz(){
+    const total = userAnswers.length;
+    const correctCount = userAnswers.filter(a=>a.correct).length;
+    const pct = Math.round((correctCount/total)*100);
+    const passed = (correctCount/total) >= PASS_THRESHOLD;
+
+    if(passed){
+      renderPass(pct);
+    } else {
+      renderFail(pct);
+    }
+  }
+
+  function renderFail(pct){
+    document.getElementById('fail-score').textContent = pct + '%';
+    document.getElementById('fail-sub').textContent =
+      `Respondiste correctamente ${userAnswers.filter(a=>a.correct).length} de ${userAnswers.length} preguntas. Necesitas al menos 70% para aprobar.`;
+
+    const areas = [...new Set(userAnswers.map(a=>a.area))];
+    const breakdown = document.getElementById('fail-breakdown');
+    breakdown.innerHTML = '';
+    areas.forEach(area=>{
+      const areaAnswers = userAnswers.filter(a=>a.area===area);
+      const c = areaAnswers.filter(a=>a.correct).length;
+      const row = document.createElement('div');
+      row.className = 'breakdown-row';
+      row.innerHTML = `<span>${area}</span><span>${c} / ${areaAnswers.length}</span>`;
+      breakdown.appendChild(row);
+    });
+
+    showScreen('screen-fail');
+  }
+
+  function renderPass(pct){
+    document.getElementById('pass-score').textContent = pct + '%';
+    document.getElementById('cert-name').textContent = candidateName;
+    document.getElementById('cert-score').textContent = pct + '%';
+
+    const today = new Date();
+    const dateStr = today.toLocaleDateString('es-CO', { year:'numeric', month:'long', day:'numeric' });
+    document.getElementById('cert-date').textContent = dateStr;
+
+    showScreen('screen-pass');
+  }
+
+  function resetAll(){
+    document.getElementById('input-name').value = '';
+    document.getElementById('input-name').style.borderColor = '';
+    showScreen('screen-intro');
+  }
+
+  document.getElementById('btn-start').addEventListener('click', startQuiz);
+  document.getElementById('btn-next').addEventListener('click', nextQuestion);
+  document.getElementById('btn-retry').addEventListener('click', startQuiz);
+  document.getElementById('btn-restart').addEventListener('click', resetAll);
+  document.getElementById('btn-print').addEventListener('click', ()=>window.print());
+
+})();
+</script>
+
+</body>
+</html>
