@@ -210,74 +210,143 @@
   }
   .breakdown-row:last-child{ border-bottom:none; }
 
-  /* Certificate */
-  .certificate{
-    border: 2px solid var(--navy);
-    padding: 40px 32px;
-    position: relative;
-    text-align:center;
-    background:
-      linear-gradient(#fff,#fff) padding-box,
-      repeating-linear-gradient(45deg, var(--gold) 0 6px, transparent 6px 12px) border-box;
-  }
-  .certificate-inner{
-    border: 1px solid var(--gold);
-    padding: 30px 20px;
-  }
-  .cert-eyebrow{
-    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-    font-size: 0.8rem;
-    color: var(--ink-soft);
-    letter-spacing: 0.03em;
-  }
-  .cert-title{
-    font-size: 1.6rem;
-    color: var(--navy);
-    margin: 10px 0 4px;
-  }
-  .cert-name{
-    font-size: 1.5rem;
-    color: var(--gold);
-    margin: 22px auto 6px;
-    font-style: italic;
-    border-bottom: 1px solid var(--line);
-    display:block;
+  /* Certificate / diploma view */
+  .certificate-stage{
     width:100%;
+    max-width:1100px;
+    margin:24px auto 0;
+    display:none;
+    container-type:inline-size;
+  }
+  .certificate-stage.generated{display:block;}
+
+  .certificate{
+    width:100%;
+    aspect-ratio:297 / 210;
+    box-sizing:border-box;
+    border:2px solid var(--navy);
+    padding:4.5% 6%;
+    position:relative;
+    text-align:center;
+    background:#fff;
+    overflow:hidden;
+  }
+
+  .certificate-inner{
+    box-sizing:border-box;
+    width:100%;
+    height:100%;
+    border:1px solid var(--gold);
+    padding:3% 4%;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:center;
+    overflow:visible;
+  }
+
+  .cert-eyebrow{
+    margin:0;
+    font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-size:clamp(.52rem,2.1cqw,.8rem);
+    line-height:1.15;
+    color:var(--ink-soft);
+    letter-spacing:.03em;
+    flex:0 0 auto;
+  }
+
+  .cert-title{
+    font-size:clamp(.82rem,4.1cqw,1.6rem);
+    line-height:1.08;
+    color:var(--navy);
+    margin:0;
+    flex:0 0 auto;
     max-width:100%;
+    overflow-wrap:anywhere;
+  }
+
+  .cert-name{
+    font-size:clamp(.72rem,3.55cqw,1.5rem);
+    color:var(--gold);
+    margin:0;
+    font-style:italic;
+    border-bottom:1px solid var(--line);
+    display:block;
+    width:94%;
+    max-width:900px;
     min-width:0;
-    padding:0 8px 6px;
-    line-height:1.3;
+    box-sizing:border-box;
+    padding:0 6px 3px;
+    line-height:1.08;
     overflow-wrap:anywhere;
     word-break:break-word;
     white-space:normal;
+    flex:0 0 auto;
   }
+
   .cert-body{
-    max-width: 420px;
-    margin: 14px auto 0;
-    color: var(--ink);
+    max-width:720px;
+    width:92%;
+    margin:0 auto;
+    color:var(--ink);
+    font-size:clamp(.5rem,2.15cqw,.95rem);
+    line-height:1.22;
+    flex:0 0 auto;
   }
+
   .cert-meta{
     display:flex;
-    justify-content: space-around;
-    margin-top: 30px;
-    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-    font-size: 0.85rem;
-    color: var(--ink-soft);
+    justify-content:space-around;
+    align-items:flex-start;
+    gap:5%;
+    width:82%;
+    margin:0 auto;
+    font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-size:clamp(.48rem,1.9cqw,.85rem);
+    line-height:1.15;
+    color:var(--ink-soft);
+    flex:0 0 auto;
   }
-  .cert-meta strong{ display:block; color: var(--ink); font-size: 1rem; }
+  .cert-meta > div{min-width:0;max-width:48%;}
+  .cert-meta strong{
+    display:block;
+    color:var(--ink);
+    font-size:clamp(.62rem,2.45cqw,1rem);
+    line-height:1.12;
+    margin-bottom:2px;
+    overflow-wrap:anywhere;
+  }
 
   .seal{
-    width: 64px; height:64px;
+    width:clamp(28px,7cqw,64px);
+    height:clamp(28px,7cqw,64px);
+    flex:0 0 auto;
+    box-sizing:border-box;
     border-radius:50%;
-    border: 2px solid var(--gold);
-    display:flex; align-items:center; justify-content:center;
-    margin: 20px auto 0;
-    color: var(--gold);
-    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    border:2px solid var(--gold);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto;
+    color:var(--gold);
+    font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
     font-weight:700;
-    font-size: 0.75rem;
+    font-size:clamp(.34rem,1.35cqw,.75rem);
     text-align:center;
-    line-height:1.1;
+    line-height:1.05;
+  }
+
+  .certificate-actions{margin-top:18px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+
+  @media (max-width:480px){
+    main{padding:20px 10px 50px;}
+    .card{padding:20px 12px;}
+    .certificate-stage{margin-top:16px;width:100%;}
+    .certificate{padding:4%;border-width:2px;}
+    .certificate-inner{padding:2.5% 3%;}
+    .cert-name{width:96%;}
+    .cert-body{width:94%;}
+    .cert-meta{width:94%;}
   }
 
   .next-steps{
@@ -301,85 +370,14 @@
   }
 
   @media print{
-    @page{
-      size:A4 portrait;
-      margin:12mm;
-    }
-
-    html, body{
-      background:#fff !important;
-      margin:0 !important;
-      padding:0 !important;
-    }
-
-    header.top,
-    footer,
-    .no-print,
-    #screen-intro,
-    #screen-quiz,
-    #screen-fail,
-    #screen-pass > h2,
-    #pass-score,
-    #screen-pass > .next-steps{
-      display:none !important;
-    }
-
-    main{
-      padding:0 !important;
-      margin:0 !important;
-      max-width:none !important;
-      width:100% !important;
-    }
-
-    .card{
-      box-shadow:none !important;
-      border:none !important;
-      padding:0 !important;
-      margin:0 !important;
-      width:100% !important;
-    }
-
-    #screen-pass{
-      display:block !important;
-      width:100% !important;
-      margin:0 !important;
-      padding:0 !important;
-    }
-
-    .certificate{
-      display:block !important;
-      width:100% !important;
-      max-width:none !important;
-      margin:0 !important;
-      padding:28px 24px !important;
-      break-inside:avoid;
-      page-break-inside:avoid;
-    }
-
-    .certificate-inner{
-      width:100% !important;
-      max-width:none !important;
-      padding:24px 18px !important;
-      break-inside:avoid;
-      page-break-inside:avoid;
-    }
-
-    .cert-name{
-      width:100% !important;
-      max-width:100% !important;
-      min-width:0 !important;
-      overflow-wrap:anywhere !important;
-      word-break:break-word !important;
-    }
-
-    .cert-body{
-      max-width:90% !important;
-    }
-
-    .cert-meta{
-      break-inside:avoid;
-      page-break-inside:avoid;
-    }
+    @page{size:A4 landscape;margin:0;}
+    html,body{background:#fff !important;margin:0 !important;padding:0 !important;}
+    header.top,footer,.no-print,#screen-intro,#screen-quiz,#screen-fail,#screen-pass > h2,#pass-score,#screen-pass > .next-steps,.certificate-actions{display:none !important;}
+    main{max-width:none !important;width:100% !important;margin:0 !important;padding:0 !important;}
+    .card{border:none !important;box-shadow:none !important;padding:0 !important;margin:0 !important;}
+    #screen-pass{display:block !important;}
+    .certificate-stage{display:block !important;max-width:none !important;margin:0 !important;}
+    .certificate{width:100% !important;aspect-ratio:297 / 210 !important;}
   }
 </style>
 </head>
@@ -438,39 +436,28 @@
 
     <!-- RESULT: PASS / CERTIFICATE -->
     <section id="screen-pass" class="screen">
-      <h2>¡Aprobaste!</h2>
+      <h2 id="pass-heading">¡Aprobaste!</h2>
       <p class="result-score pass" id="pass-score">0%</p>
 
-      <div class="certificate" style="margin-top:24px;">
-        <div class="certificate-inner">
-          <p class="cert-eyebrow">Constancia de resultados</p>
-          <p class="cert-title">Prueba de Conocimientos Básicos</p>
-          <p class="cert-name" id="cert-name">—</p>
-          <p class="cert-body">Presentó y aprobó la Prueba de Conocimientos Básicos, cubriendo las áreas de Matemáticas, Lenguaje, Ciencias Naturales, Ciencias Sociales e Inglés.</p>
-
-          <div class="cert-meta">
-            <div>
-              <strong id="cert-score">0%</strong>
-              Puntaje obtenido
-            </div>
-            <div>
-              <strong id="cert-date">—</strong>
-              Fecha
-            </div>
-          </div>
-
-          <div class="seal">CONSTANCIA<br>DE RESULTADOS</div>
-        </div>
-      </div>
-
-      <div class="next-steps">
-        <strong>Para continuar el proceso:</strong> toma una captura de pantalla de esta constancia (con tu nombre, puntaje y fecha visibles) y envíanosla para recibir tu certificación.
-      </div>
-
-      <div class="actions no-print">
-        <button id="btn-print" class="sans secondary" type="button">Guardar como PDF</button>
-        <button id="btn-browser-print" class="sans secondary" type="button">Imprimir</button>
+      <div class="actions no-print" id="pass-actions">
+        <button id="btn-generate" class="sans secondary" type="button">Generar</button>
         <button id="btn-restart" class="sans secondary" type="button">Volver al inicio</button>
+      </div>
+
+      <div class="certificate-stage" id="certificate-stage" aria-live="polite">
+        <div class="certificate">
+          <div class="certificate-inner">
+            <p class="cert-eyebrow">Constancia de resultados</p>
+            <p class="cert-title">Prueba de Conocimientos Básicos</p>
+            <p class="cert-name" id="cert-name">—</p>
+            <p class="cert-body">Presentó y aprobó la Prueba de Conocimientos Básicos, cubriendo las áreas de Matemáticas, Lenguaje, Ciencias Naturales, Ciencias Sociales e Inglés.</p>
+            <div class="cert-meta">
+              <div><strong id="cert-score">0%</strong>Puntaje obtenido</div>
+              <div><strong id="cert-date">—</strong>Fecha</div>
+            </div>
+            <div class="seal">CONSTANCIA<br>DE RESULTADOS</div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -923,6 +910,9 @@
 
   function renderPass(pct){
     document.getElementById('pass-score').textContent = pct + '%';
+    document.getElementById('pass-heading').style.display = '';
+    document.getElementById('pass-score').style.display = '';
+    document.getElementById('certificate-stage').classList.remove('generated');
     document.getElementById('cert-name').textContent = candidateName;
     document.getElementById('cert-score').textContent = pct + '%';
 
@@ -936,6 +926,9 @@
   function resetAll(){
     document.getElementById('input-name').value = '';
     document.getElementById('input-name').style.borderColor = '';
+    document.getElementById('certificate-stage').classList.remove('generated');
+    document.getElementById('pass-heading').style.display = '';
+    document.getElementById('pass-score').style.display = '';
     showScreen('screen-intro');
   }
 
@@ -943,108 +936,12 @@
   document.getElementById('btn-next').addEventListener('click', nextQuestion);
   document.getElementById('btn-retry').addEventListener('click', startQuiz);
   document.getElementById('btn-restart').addEventListener('click', resetAll);
-  // Genera el PDF directamente en el navegador, sin depender de window.print().
-  // Esto evita que el botón falle en visores embebidos que bloquean el diálogo de impresión.
-  function pdfWinAnsi(text){
-    const special = {'¡':161,'¿':191,'Á':193,'É':201,'Í':205,'Ñ':209,'Ó':211,'Ú':218,'Ü':220,'á':225,'é':233,'í':237,'ñ':241,'ó':243,'ú':250,'ü':252,'²':178,'³':179,'€':128};
-    const out=[];
-    for(const ch of String(text ?? '')){
-      const c=ch.charCodeAt(0);
-      out.push(c<=127 ? c : (special[ch] ?? 63));
-    }
-    return out;
-  }
-  function pdfEscape(text){
-    // Hex strings keep the PDF stream ASCII-only while preserving Spanish accents in WinAnsi.
-    return '<'+pdfWinAnsi(text).map(b=>b.toString(16).padStart(2,'0')).join('')+'>';
-  }
-  function pdfTextWidth(text,size){
-    let units=0;
-    for(const ch of String(text)){
-      if('ilI.,:;!|'.includes(ch)) units+=2.8;
-      else if('MW@#%'.includes(ch)) units+=8.8;
-      else if(ch===' ') units+=3.0;
-      else units+=5.2;
-    }
-    return units*size/7;
-  }
-  function wrapPdfText(text,maxWidth,size){
-    const words=String(text).trim().split(/\s+/), lines=[]; let line='';
-    for(const word of words){
-      const test=line ? line+' '+word : word;
-      if(pdfTextWidth(test,size)<=maxWidth) line=test;
-      else { if(line) lines.push(line); line=word; }
-    }
-    if(line) lines.push(line);
-    return lines;
-  }
-  function buildCertificatePdf(name,score,date){
-    const W=595.28,H=841.89,ops=[];
-    const navy=[0.05,0.14,0.24],gold=[0.78,0.60,0.20],ink=[0.12,0.13,0.15],soft=[0.40,0.42,0.45];
-    const rgb=c=>c.map(v=>v.toFixed(3)).join(' ');
-    const rect=(x,y,w,h,c)=>ops.push(`${rgb(c)} RG ${x} ${y} ${w} ${h} re S`);
-    const line=(x1,y1,x2,y2,c,w=1)=>ops.push(`${rgb(c)} RG ${w} w ${x1} ${y1} m ${x2} ${y2} l S`);
-    const txt=(t,x,y,size,font,c,align='left')=>{
-      const width=pdfTextWidth(t,size); let xx=x;
-      if(align==='center') xx=x-width/2; else if(align==='right') xx=x-width;
-      ops.push(`${rgb(c)} rg BT /${font} ${size} Tf 1 0 0 1 ${xx.toFixed(2)} ${y.toFixed(2)} Tm ${pdfEscape(t)} Tj ET`);
-    };
-    rect(42,105,W-84,H-210,navy); rect(48,111,W-96,H-222,gold);
-    txt('CONSTANCIA DE RESULTADOS',W/2,650,11,'F1',soft,'center');
-    txt('Prueba de Conocimientos Básicos',W/2,615,23,'F2',navy,'center');
-    const nameLines=wrapPdfText(name,W-145,20).slice(0,3); let ny=570;
-    nameLines.forEach(l=>{txt(l,W/2,ny,20,'F3',gold,'center');ny-=28;});
-    line(95,ny+10,W-95,ny+10,gold,.7);
-    const body='Presentó y aprobó la Prueba de Conocimientos Básicos, cubriendo las áreas de Matemáticas, Lenguaje, Ciencias Naturales, Ciencias Sociales e Inglés.';
-    let by=ny-35; wrapPdfText(body,W-150,11).slice(0,5).forEach(l=>{txt(l,W/2,by,11,'F1',ink,'center');by-=17;});
-    txt(String(score),205,300,18,'F2',navy,'center'); txt('Puntaje obtenido',205,278,9,'F1',soft,'center');
-    txt(String(date),390,300,12,'F2',navy,'center'); txt('Fecha',390,278,9,'F1',soft,'center');
-    ops.push(`${rgb(gold)} RG 2 w 275 180 45 45 re S`); txt('CONSTANCIA',297.64,198,8,'F2',gold,'center'); txt('DE RESULTADOS',297.64,184,7,'F1',gold,'center');
-    const content=ops.join('\n');
-    const objects=[
-      '<< /Type /Catalog /Pages 2 0 R >>',
-      '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
-      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 4 0 R /F2 5 0 R /F3 6 0 R >> >> /Contents 7 0 R >>`,
-      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
-      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>',
-      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>',
-      `<< /Length ${new TextEncoder().encode(content+'\n').length} >>\nstream\n${content}\nendstream`
-    ];
-    const chunks=[];let offset=0;const push=str=>{const b=new TextEncoder().encode(str);chunks.push(b);offset+=b.length;};
-    push('%PDF-1.4\n%âãÏÓ\n');const offsets=[0];
-    objects.forEach((o,i)=>{offsets.push(offset);push(`${i+1} 0 obj\n${o}\nendobj\n`);});
-    const xref=offset;push(`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`);
-    for(let i=1;i<offsets.length;i++)push(String(offsets[i]).padStart(10,'0')+' 00000 n \n');
-    push(`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
-    const total=chunks.reduce((n,b)=>n+b.length,0),pdf=new Uint8Array(total);let pos=0;
-    chunks.forEach(b=>{pdf.set(b,pos);pos+=b.length;});return pdf;
-  }
-  function downloadCertificatePdf(){
-    const name=(document.getElementById('cert-name').textContent||candidateName||'Constancia').trim();
-    const score=(document.getElementById('cert-score').textContent||'').trim();
-    const date=(document.getElementById('cert-date').textContent||'').trim();
-    if(!name||name==='—') throw new Error('No hay una constancia disponible para imprimir.');
-    const blob=new Blob([buildCertificatePdf(name,score,date)],{type:'application/pdf'}),url=URL.createObjectURL(blob),a=document.createElement('a');
-    const safe=name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,70)||'constancia';
-    a.href=url;a.download=`Constancia-${safe}.pdf`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
-  }
-  document.getElementById('btn-print').addEventListener('click',()=>{
-    try{
-      downloadCertificatePdf();
-    }catch(err){
-      console.error(err);
-      alert('No fue posible generar el PDF. Puedes usar el botón Imprimir como alternativa.');
-    }
-  });
-
-  document.getElementById('btn-browser-print').addEventListener('click',()=>{
-    try{
-      window.focus();
-      window.print();
-    }catch(err){
-      console.error(err);
-      alert('La función de impresión no está disponible en este navegador.');
-    }
+  document.getElementById('btn-generate').addEventListener('click',()=>{
+    const stage=document.getElementById('certificate-stage');
+    stage.classList.add('generated');
+    document.getElementById('pass-heading').style.display='none';
+    document.getElementById('pass-score').style.display='none';
+    requestAnimationFrame(()=>stage.scrollIntoView({behavior:'smooth',block:'center'}));
   });
 
 })();
